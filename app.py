@@ -1,8 +1,7 @@
 from fastapi import FastAPI,Request,Response
 from pydantic import BaseModel
 import uuid
-import uvicorn
-import os
+
 
 from fastapi.responses import HTMLResponse,StreamingResponse
 from fastapi.staticfiles import StaticFiles
@@ -47,6 +46,3 @@ async def ask_question(query: QueryRequest, request: Request, response: Response
     return StreamingResponse(generate(), media_type="text/plain")
 
 
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 10000))
-    uvicorn.run("app:app", host="0.0.0.0", port=port)
