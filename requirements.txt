@@ -1,13 +1,15 @@
 sentence-transformers==2.2.2
 langchain==1.2.10
-langchain-core
+fastapi
+uvicorn
+jinja2
+python-dotenv
 langchain-community
 langchain-openai
 langchain-pinecone
-langchain-experimental
-fastapi
-uvicorn
+pinecone
+FlagEmbedding
+ragas
+datasets
 pypdf
-python-dotenv
-pinecone[grpc]
 -e .
