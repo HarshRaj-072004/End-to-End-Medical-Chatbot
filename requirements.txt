@@ -1,5 +1,5 @@
 sentence-transformers==2.2.2
-langchain==1.2.10
+langchain>=1.2.10
 fastapi
 uvicorn
 jinja2
