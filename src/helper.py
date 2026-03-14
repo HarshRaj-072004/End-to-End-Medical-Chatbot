@@ -12,9 +12,16 @@ def load_pdf_file(data):
 
 #Split the extracted data into chunks
 def text_split(extracted_data):
-  text_splitter=RecursiveCharacterTextSplitter(chunk_size=500,chunk_overlap=20)
-  text_chunks=text_splitter.split_documents(extracted_data)
-  return text_chunks
+
+    text_splitter = RecursiveCharacterTextSplitter(
+        chunk_size=400,
+        chunk_overlap=80,
+        separators=["\n\n", "\n", ".", " "]
+    )
+
+    text_chunks = text_splitter.split_documents(extracted_data)
+
+    return text_chunks
 
 #Download the Embeddings from Hugging face
 def download_hugging_face_embeddings():

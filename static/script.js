@@ -7,7 +7,7 @@ if(message.trim() === "") return;
 
 let chatbox = document.getElementById("chatbox");
 
-// user message
+// show user message
 chatbox.innerHTML += `
 <div class="item right">
 <div class="msg"><p>${message}</p></div>
@@ -28,16 +28,35 @@ question:message
 })
 });
 
-let data = await response.json();
+// create bot message container
+let botItem = document.createElement("div");
+botItem.className = "item";
 
-// bot message
-chatbox.innerHTML += `
-<div class="item">
+botItem.innerHTML = `
 <div class="icon"><i class="fa fa-user"></i></div>
-<div class="msg"><p>${data.answer}</p></div>
-</div>
-<br clear="both">
+<div class="msg"><p></p></div>
 `;
 
+chatbox.appendChild(botItem);
+
+let botText = botItem.querySelector("p");
+
+// read streaming response
+const reader = response.body.getReader();
+const decoder = new TextDecoder();
+
+let botMessage = "";
+
+while(true){
+
+const {done, value} = await reader.read();
+
+if(done) break;
+
+botMessage += decoder.decode(value);
+
+botText.textContent = botMessage;
+
 chatbox.scrollTop = chatbox.scrollHeight;
+}
 }
