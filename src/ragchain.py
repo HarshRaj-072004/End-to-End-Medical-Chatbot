@@ -25,23 +25,32 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 index_name = "medicalchatbot"
 
 # reuse helper function
-embeddings = download_hugging_face_embeddings()
+docsearch = None
+retriever = None
 
-docsearch = PineconeVectorStore.from_existing_index(
-    index_name=index_name,
-    embedding=embeddings
-)
+def get_retriever():
+    global docsearch, retriever
 
-retriever = docsearch.as_retriever(
-    search_type="similarity",
-    search_kwargs={"k": 5}
-)
+    if retriever is None:
+        embeddings = download_hugging_face_embeddings()
+
+        docsearch = PineconeVectorStore.from_existing_index(
+            index_name=index_name,
+            embedding=embeddings
+        )
+
+        retriever = docsearch.as_retriever(
+            search_type="similarity",
+            search_kwargs={"k": 5}
+        )
+
+    return retriever
 
 reranker = FlagReranker('BAAI/bge-reranker-base')
 
 def retrieve_and_rerank(query):
 
-    docs = retriever.invoke(query)
+    docs = get_retriever().invoke(query)
 
     scores = reranker.compute_score(
         [[query, doc.page_content] for doc in docs]
